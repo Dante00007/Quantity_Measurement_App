@@ -3,7 +3,9 @@ namespace QuantityMeasurementApp.models;
 public enum LengthUnit
 {
    FEET,
-   INCH
+   INCH,
+   YARD,
+   CENTIMETER
 }
 
 public static class LengthUnitExtension
@@ -14,6 +16,8 @@ public static class LengthUnitExtension
         {
             LengthUnit.FEET => 12.0,
             LengthUnit.INCH => 1.0,
+            LengthUnit.YARD => 36.0,
+            LengthUnit.CENTIMETER => 0.393701,
             _ => 0.0
         };
     }
