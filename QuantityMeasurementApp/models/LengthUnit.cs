@@ -1,24 +1,34 @@
-namespace QuantityMeasurementApp.models;
-
-public enum LengthUnit
+namespace QuantityMeasurementApp.models
 {
-    INCH,
-    FEET,
-    YARD,
-    CENTIMETER
-}
-
-public static class LengthUnitExtension
-{
-    public static double GetFactor(this LengthUnit lengthUnit)
+    public enum LengthUnit
     {
-        return lengthUnit switch
+        FEET,
+        INCH,
+        YARD,
+        CENTIMETER
+    }
+
+    public static class LengthUnitExtensions
+    {
+        public static double GetFactor(this LengthUnit unit)
         {
-            LengthUnit.FEET => 12.0,
-            LengthUnit.INCH => 1.0,
-            LengthUnit.YARD => 36.0,
-            LengthUnit.CENTIMETER => 0.393701,
-            _ => 0.0
-        };
+            return unit switch
+            {
+                LengthUnit.FEET => 1.0,           
+                LengthUnit.INCH => 1.0 / 12.0,    
+                LengthUnit.YARD => 3.0,         
+                LengthUnit.CENTIMETER => 1.0 / 30.48,
+                _ => throw new ArgumentException("Invalid Unit")
+            };
+        }
+
+        public static double ConvertToBaseUnit(this LengthUnit unit, double value)
+        {
+            return value * unit.GetFactor();
+        }
+        public static double ConvertFromBaseUnit(this LengthUnit unit, double baseValue)
+        {
+            return baseValue / unit.GetFactor();
+        }
     }
 }
