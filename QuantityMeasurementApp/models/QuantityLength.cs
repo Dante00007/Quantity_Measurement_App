@@ -11,6 +11,10 @@ public class QuantityLength
         _unit = unit;
     }
 
+    private double GetValueInInches()
+    {
+        return _value * _unit.GetFactor();
+    }
     public override bool Equals(object? obj)
     {
         if (ReferenceEquals(this, obj))
@@ -19,14 +23,23 @@ public class QuantityLength
         if (obj is not QuantityLength other)
             return false;
 
-        double firstValueInInches = _value * _unit.GetFactor();
-        double secondValueInInches = (other)._value * (other)._unit.GetFactor();
-
+        double firstValueInInches = this.GetValueInInches();
+        double secondValueInInches = (other).GetValueInInches();
         return Math.Abs(firstValueInInches - secondValueInInches) < 0.001;
     }
 
     public override int GetHashCode()
     {
         return (_value * _unit.GetFactor()).GetHashCode();
+    }
+
+    public static double Convert(double value, LengthUnit sourceUnit,LengthUnit targetUnit)
+    {
+        if (!double.IsFinite(value))
+                throw new ArgumentException("Value must be a finite number.");
+        double valueInBaseUnit = value * sourceUnit.GetFactor();
+        double targetValue = valueInBaseUnit / targetUnit.GetFactor();
+
+        return Math.Round(targetValue, 6);
     }
 }

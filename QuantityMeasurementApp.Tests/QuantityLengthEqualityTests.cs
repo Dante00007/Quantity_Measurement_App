@@ -1,11 +1,9 @@
 ﻿﻿namespace QuantityMeasurementApp.Tests;
 
-
-using QuantityMeasurementApp;
 using QuantityMeasurementApp.models;
 
 [TestClass]
-public class QuantityLengthTests
+public class QuantityLengthEqualityTests
 {
    
     [TestMethod]
@@ -158,7 +156,7 @@ public class QuantityLengthTests
     [TestMethod]
     public void TestEquality_CentimetersToInches_EquivalentValue()
     {
-        // 1 cm = 0.393701 inches
+        
         var cm = new QuantityLength(1.0, LengthUnit.CENTIMETER);
         var inch = new QuantityLength(0.393701, LengthUnit.INCH);
         Assert.IsTrue(cm.Equals(inch), "1 cm should be equivalent to 0.393701 inches");
@@ -175,7 +173,6 @@ public class QuantityLengthTests
     [TestMethod]
     public void TestEquality_MultiUnit_TransitiveProperty()
     {
-        // If A = B and B = C, then A = C
         var a = new QuantityLength(1.0, LengthUnit.YARD);
         var b = new QuantityLength(3.0, LengthUnit.FEET);
         var c = new QuantityLength(36.0, LengthUnit.INCH);
