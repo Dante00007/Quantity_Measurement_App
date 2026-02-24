@@ -3,22 +3,24 @@ using QuantityMeasurementApp.models;
 
 try 
 {
-    double feetToInch = QuantityLength.Convert(1.0, LengthUnit.FEET, LengthUnit.INCH);
-    Console.WriteLine($"1 Feet to Inch: {feetToInch}");
-
-    double yardsToFeet = QuantityLength.Convert(3.0, LengthUnit.YARD, LengthUnit.FEET);
-    Console.WriteLine($"1 Yard to Feet: {yardsToFeet}"); 
+    var sum1 = QuantityLength.Add(new QuantityLength(1.0, LengthUnit.FEET), new QuantityLength(2.0, LengthUnit.FEET), LengthUnit.FEET);
+    Console.WriteLine($"Add 1.0 Feet + 2.0 Feet: {sum1.Value} {sum1.Unit}");
 
     
-    double inchToYard = QuantityLength.Convert(36.0, LengthUnit.INCH, LengthUnit.YARD);
-    Console.WriteLine($"36 Inches to Yard: {inchToYard}");
+    var sum2 = QuantityLength.Add(new QuantityLength(1.0, LengthUnit.FEET), new QuantityLength(12.0, LengthUnit.INCH), LengthUnit.FEET);
+    Console.WriteLine($"Add 1.0 Feet + 12.0 Inches: {sum2.Value} {sum2.Unit}");
 
 
-    double cmToInch = QuantityLength.Convert(1.0, LengthUnit.CENTIMETER, LengthUnit.INCH);
-    Console.WriteLine($"1 Centimeter to Inches: {cmToInch}"); 
+    var sum3 = QuantityLength.Add(new QuantityLength(12.0, LengthUnit.INCH), new QuantityLength(1.0, LengthUnit.FEET), LengthUnit.INCH);
+    Console.WriteLine($"Add 12.0 Inches + 1.0 Feet: {sum3.Value} {sum3.Unit}");
 
-    double feetToInchTwo = QuantityLength.Convert(0.0, LengthUnit.FEET, LengthUnit.INCH);
-    Console.WriteLine($"1 Feet to Inch: {feetToInchTwo}");
+   
+    var sum4 = QuantityLength.Add(new QuantityLength(1.0, LengthUnit.YARD), new QuantityLength(3.0, LengthUnit.FEET), LengthUnit.YARD);
+    Console.WriteLine($"Add 1.0 Yards + 3.0 Feet: {sum4.Value} {sum4.Unit}");
+
+
+    var sum5 = QuantityLength.Add(new QuantityLength(2.54, LengthUnit.CENTIMETER), new QuantityLength(1.0, LengthUnit.INCH), LengthUnit.CENTIMETER);
+    Console.WriteLine($"Add 2.54 Centimeters + 1.0 Inch: {sum5.Value} {sum5.Unit}");
 
  
 }
