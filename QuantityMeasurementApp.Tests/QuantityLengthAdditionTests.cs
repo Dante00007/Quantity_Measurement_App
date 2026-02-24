@@ -14,7 +14,7 @@ public class QuantityLengthAdditionTests
         var q1 = new QuantityLength(1.0, LengthUnit.FEET);
         var q2 = new QuantityLength(2.0, LengthUnit.FEET);
         var expected = new QuantityLength(3.0, LengthUnit.FEET);
-        Assert.AreEqual(expected, QuantityLength.Add(q1, q2, LengthUnit.FEET));
+        Assert.AreEqual(expected, QuantityLength.Add(q1, q2));
     }
 
     [TestMethod]
@@ -23,7 +23,7 @@ public class QuantityLengthAdditionTests
         var q1 = new QuantityLength(6.0, LengthUnit.INCH);
         var q2 = new QuantityLength(6.0, LengthUnit.INCH);
         var expected = new QuantityLength(12.0, LengthUnit.INCH);
-        Assert.AreEqual(expected, QuantityLength.Add(q1, q2, LengthUnit.INCH));
+        Assert.AreEqual(expected, QuantityLength.Add(q1, q2));
     }
 
     [TestMethod]
@@ -32,7 +32,7 @@ public class QuantityLengthAdditionTests
         var q1 = new QuantityLength(1.0, LengthUnit.FEET);
         var q2 = new QuantityLength(12.0, LengthUnit.INCH);
         var expected = new QuantityLength(2.0, LengthUnit.FEET);
-        Assert.AreEqual(expected, QuantityLength.Add(q1, q2, LengthUnit.FEET));
+        Assert.AreEqual(expected, QuantityLength.Add(q1, q2));
     }
 
     [TestMethod]
@@ -41,7 +41,7 @@ public class QuantityLengthAdditionTests
         var q1 = new QuantityLength(12.0, LengthUnit.INCH);
         var q2 = new QuantityLength(1.0, LengthUnit.FEET);
         var expected = new QuantityLength(24.0, LengthUnit.INCH);
-        Assert.AreEqual(expected, QuantityLength.Add(q1, q2, LengthUnit.INCH));
+        Assert.AreEqual(expected, QuantityLength.Add(q1, q2));
     }
 
     [TestMethod]
@@ -50,7 +50,7 @@ public class QuantityLengthAdditionTests
         var q1 = new QuantityLength(1.0, LengthUnit.YARD);
         var q2 = new QuantityLength(3.0, LengthUnit.FEET);
         var expected = new QuantityLength(2.0, LengthUnit.YARD);
-        Assert.AreEqual(expected, QuantityLength.Add(q1, q2, LengthUnit.YARD));
+        Assert.AreEqual(expected, QuantityLength.Add(q1, q2));
     }
 
     [TestMethod]
@@ -60,7 +60,7 @@ public class QuantityLengthAdditionTests
         var q2 = new QuantityLength(1.0, LengthUnit.INCH);
         var expected = new QuantityLength(5.08, LengthUnit.CENTIMETER);
         // Using Equals check because of precision snap to 5.08
-        Assert.IsTrue(expected.Equals(QuantityLength.Add(q1, q2, LengthUnit.CENTIMETER)));
+        Assert.IsTrue(expected.Equals(QuantityLength.Add(q1, q2)));
     }
 
     [TestMethod]
@@ -68,8 +68,8 @@ public class QuantityLengthAdditionTests
     {
         var q1 = new QuantityLength(1.0, LengthUnit.FEET);
         var q2 = new QuantityLength(12.0, LengthUnit.INCH);
-        var result1 = QuantityLength.Add(q1, q2, LengthUnit.INCH);
-        var result2 = QuantityLength.Add(q2, q1, LengthUnit.INCH);
+        var result1 = QuantityLength.Add(q1, q2);
+        var result2 = QuantityLength.Add(q2, q1);
         Assert.AreEqual(result1, result2);
     }
 
@@ -79,7 +79,7 @@ public class QuantityLengthAdditionTests
         var q1 = new QuantityLength(5.0, LengthUnit.FEET);
         var q2 = new QuantityLength(0.0, LengthUnit.INCH);
         var expected = new QuantityLength(5.0, LengthUnit.FEET);
-        Assert.AreEqual(expected, QuantityLength.Add(q1, q2, LengthUnit.FEET));
+        Assert.AreEqual(expected, QuantityLength.Add(q1, q2));
     }
 
     [TestMethod]
@@ -88,7 +88,7 @@ public class QuantityLengthAdditionTests
         var q1 = new QuantityLength(5.0, LengthUnit.FEET);
         var q2 = new QuantityLength(-2.0, LengthUnit.FEET);
         var expected = new QuantityLength(3.0, LengthUnit.FEET);
-        Assert.AreEqual(expected, QuantityLength.Add(q1, q2, LengthUnit.FEET));
+        Assert.AreEqual(expected, QuantityLength.Add(q1, q2));
     }
 
     [TestMethod]
@@ -96,7 +96,7 @@ public class QuantityLengthAdditionTests
     {
         var q1 = new QuantityLength(1.0, LengthUnit.FEET);
         Assert.Throws<ArgumentException>(() => 
-            QuantityLength.Add(q1, null!, LengthUnit.FEET));
+            QuantityLength.Add(q1, null!));
     }
 
     [TestMethod]
@@ -105,7 +105,7 @@ public class QuantityLengthAdditionTests
         var q1 = new QuantityLength(1e6, LengthUnit.FEET);
         var q2 = new QuantityLength(1e6, LengthUnit.FEET);
         var expected = new QuantityLength(2e6, LengthUnit.FEET);
-        Assert.AreEqual(expected, QuantityLength.Add(q1, q2, LengthUnit.FEET));
+        Assert.AreEqual(expected, QuantityLength.Add(q1, q2));
     }
 
     [TestMethod]
@@ -113,7 +113,7 @@ public class QuantityLengthAdditionTests
     {
         var q1 = new QuantityLength(0.001, LengthUnit.FEET);
         var q2 = new QuantityLength(0.002, LengthUnit.FEET);
-        var result = QuantityLength.Add(q1, q2, LengthUnit.FEET);
+        var result = QuantityLength.Add(q1, q2);
         
         Assert.AreEqual(0.003, result.Value, Epsilon);
     }

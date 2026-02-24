@@ -45,7 +45,7 @@ public class QuantityLength
         return Math.Round(targetValue, 6);
     }
 
-    public static QuantityLength Add(QuantityLength quantity1, QuantityLength quantity2, LengthUnit targetUnit)
+    private static double AddInBaseUnit(QuantityLength quantity1, QuantityLength quantity2)
     {
         if (quantity1 == null || quantity2 == null)
             throw new ArgumentException("Quantities cannot be null.");
@@ -60,6 +60,24 @@ public class QuantityLength
         double value2Inches = Convert(value2, quantity2._unit, LengthUnit.INCH);
 
         double result = value1Inches + value2Inches;
+
+        return result;
+
+    }
+    public static QuantityLength Add(QuantityLength quantity1, QuantityLength quantity2)
+    {
+
+        double result = AddInBaseUnit(quantity1, quantity2);
+
+        LengthUnit targetUnit = quantity1._unit;
+        double newValue = Math.Round((result / targetUnit.GetFactor()), 4);
+
+        return new QuantityLength(newValue, targetUnit);
+    }
+    public static QuantityLength Add(QuantityLength quantity1, QuantityLength quantity2, LengthUnit targetUnit)
+    {
+
+        double result = AddInBaseUnit(quantity1, quantity2);
 
         double newValue = Math.Round((result / targetUnit.GetFactor()), 4);
 
