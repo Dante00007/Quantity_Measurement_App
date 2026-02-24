@@ -45,7 +45,7 @@ public class QuantityLength
         return Math.Round(targetValue, 6);
     }
 
-    public static QuantityLength Add(QuantityLength quantity1, QuantityLength quantity2, LengthUnit targetUnit)
+    public static QuantityLength Add(QuantityLength quantity1, QuantityLength quantity2)
     {
         if (quantity1 == null || quantity2 == null)
             throw new ArgumentException("Quantities cannot be null.");
@@ -61,6 +61,7 @@ public class QuantityLength
 
         double result = value1Inches + value2Inches;
 
+        LengthUnit targetUnit = quantity1._unit;
         double newValue = Math.Round((result / targetUnit.GetFactor()), 4);
 
         return new QuantityLength(newValue, targetUnit);
