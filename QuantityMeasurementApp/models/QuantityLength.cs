@@ -13,9 +13,9 @@ public class QuantityLength
 
     public double Value => _value;
     public LengthUnit Unit => _unit;
-    private double GetValueInInches()
+    private double GetValueInBaseUnit()
     {
-        return _value * _unit.GetFactor();
+        return _unit.ConvertToBaseUnit(_value);
     }
     public override bool Equals(object? obj)
     {
@@ -25,22 +25,24 @@ public class QuantityLength
         if (obj is not QuantityLength other)
             return false;
 
-        double firstValueInInches = this.GetValueInInches();
-        double secondValueInInches = (other).GetValueInInches();
-        return Math.Abs(firstValueInInches - secondValueInInches) < 0.001;
+        double firstValueInBaseUnit = this.GetValueInBaseUnit();
+        double secondValueInBaseUnit = (other).GetValueInBaseUnit();
+        return Math.Abs(firstValueInBaseUnit - secondValueInBaseUnit) < 0.001;
     }
 
     public override int GetHashCode()
     {
-        return (_value * _unit.GetFactor()).GetHashCode();
+        return GetValueInBaseUnit().GetHashCode();
     }
 
     public static double Convert(double value, LengthUnit sourceUnit, LengthUnit targetUnit)
     {
         if (!double.IsFinite(value))
             throw new ArgumentException("Value must be a finite number.");
-        double valueInBaseUnit = value * sourceUnit.GetFactor();
-        double targetValue = valueInBaseUnit / targetUnit.GetFactor();
+
+        double baseValue = sourceUnit.ConvertToBaseUnit(value);
+
+        double targetValue = targetUnit.ConvertFromBaseUnit(baseValue);
 
         return Math.Round(targetValue, 6);
     }
@@ -56,10 +58,10 @@ public class QuantityLength
         if (!double.IsFinite(value1) || !double.IsFinite(value2))
             throw new ArgumentException("Value must be a finite number.");
 
-        double value1Inches = Convert(value1, quantity1._unit, LengthUnit.INCH);
-        double value2Inches = Convert(value2, quantity2._unit, LengthUnit.INCH);
+        double value1InBaseUnit = quantity1.GetValueInBaseUnit();
+        double value2InBaseUnit = quantity2.GetValueInBaseUnit();
 
-        double result = value1Inches + value2Inches;
+        double result = value1InBaseUnit + value2InBaseUnit;
 
         return result;
 
@@ -70,8 +72,8 @@ public class QuantityLength
         double result = AddInBaseUnit(quantity1, quantity2);
 
         LengthUnit targetUnit = quantity1._unit;
-        double newValue = Math.Round((result / targetUnit.GetFactor()), 4);
 
+        double newValue = Math.Round(targetUnit.ConvertFromBaseUnit(result), 4);
         return new QuantityLength(newValue, targetUnit);
     }
     public static QuantityLength Add(QuantityLength quantity1, QuantityLength quantity2, LengthUnit targetUnit)
@@ -79,8 +81,7 @@ public class QuantityLength
 
         double result = AddInBaseUnit(quantity1, quantity2);
 
-        double newValue = Math.Round((result / targetUnit.GetFactor()), 4);
-
+        double newValue = Math.Round(targetUnit.ConvertFromBaseUnit(result), 4);
         return new QuantityLength(newValue, targetUnit);
     }
 }
