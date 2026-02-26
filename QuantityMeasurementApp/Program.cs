@@ -2,31 +2,63 @@
 
 try 
 {
-    var q1 = new QuantityLength(1.0, LengthUnit.FEET);
-    double convertedInches = QuantityLength.Convert(q1.Value, q1.Unit, LengthUnit.INCH);
-    Console.WriteLine($"Quantity(1.0, FEET) to INCHES: {convertedInches:F1} {LengthUnit.INCH}");
+    var kg1 = new QuantityWeight(1.0, WeightUnit.KILOGRAM);
+    var kg2 = new QuantityWeight(1.0, WeightUnit.KILOGRAM);
+    Console.WriteLine($"Quantity(1.0, KILOGRAM) equals Quantity(1.0, KILOGRAM): {kg1.Equals(kg2)}");
 
-    var sum1 = QuantityLength.Add(new QuantityLength(1.0, LengthUnit.FEET), new QuantityLength(12.0, LengthUnit.INCH), LengthUnit.FEET);
-    Console.WriteLine($"Add 1.0 Feet + 12.0 Inches: {sum1.Value:F1} {sum1.Unit}");
+    var kg1_2 = new QuantityWeight(1.0, WeightUnit.KILOGRAM);
+    var g1000 = new QuantityWeight(1000.0, WeightUnit.GRAM);
+    Console.WriteLine($"Quantity(1.0, KILOGRAM) equals Quantity(1000.0, GRAM): {kg1_2.Equals(g1000)}");
 
-    var qInch = new QuantityLength(36.0, LengthUnit.INCH);
-    var qYard = new QuantityLength(1.0, LengthUnit.YARD);
-    Console.WriteLine($"36.0 INCHES equals 1.0 YARDS: {qInch.Equals(qYard)}");
+    var lb2_1 = new QuantityWeight(2.0, WeightUnit.POUND);
+    var lb2_2 = new QuantityWeight(2.0, WeightUnit.POUND);
+    Console.WriteLine($"Quantity(2.0, POUND) equals Quantity(2.0, POUND): {lb2_1.Equals(lb2_2)}");
 
-    var sum2 = QuantityLength.Add(new QuantityLength(1.0, LengthUnit.YARD), new QuantityLength(3.0, LengthUnit.FEET), LengthUnit.YARD);
-    Console.WriteLine($"Add 1.0 Yards + 3.0 Feet: {sum2.Value:F1} {sum2.Unit}");
+    var kg1_3 = new QuantityWeight(1.0, WeightUnit.KILOGRAM);
+    var lbApprox = new QuantityWeight(2.20462, WeightUnit.POUND);
+    Console.WriteLine($"Quantity(1.0, KILOGRAM) equals Quantity(~2.20462, POUND): {kg1_3.Equals(lbApprox)}");
 
-    double cmToInch = QuantityLength.Convert(2.54, LengthUnit.CENTIMETER, LengthUnit.INCH);
-    Console.WriteLine($"2.54 Centimeters to Inches: {cmToInch:F1} {LengthUnit.INCH}");
+    var g500 = new QuantityWeight(500.0, WeightUnit.GRAM);
+    var kg05 = new QuantityWeight(0.5, WeightUnit.KILOGRAM);
+    Console.WriteLine($"Quantity(500.0, GRAM) equals Quantity(0.5, KILOGRAM): {g500.Equals(kg05)}");
 
-    var sum3 = QuantityLength.Add(new QuantityLength(5.0, LengthUnit.FEET), new QuantityLength(0.0, LengthUnit.INCH), LengthUnit.FEET);
-    Console.WriteLine($"Add 5.0 Feet + 0.0 Inches: {sum3.Value:F1} {sum3.Unit}");
+    var lb1 = new QuantityWeight(1.0, WeightUnit.POUND);
+    var gApprox = new QuantityWeight(453.592, WeightUnit.GRAM);
+    Console.WriteLine($"Quantity(1.0, POUND) equals Quantity(~453.592, GRAM): {lb1.Equals(gApprox)}");
 
-    double feetBase = LengthUnit.FEET.ConvertToBaseUnit(12.0);
-    Console.WriteLine($"FEET 12.0 to Base: {feetBase:F1}");
+    double kgToG = QuantityWeight.Convert(1.0, WeightUnit.KILOGRAM, WeightUnit.GRAM);
+    Console.WriteLine($"Quantity(1.0, KILOGRAM) to GRAM: {kgToG:F1} {WeightUnit.GRAM}");
 
-    double inchBase = LengthUnit.INCH.ConvertToBaseUnit(12.0);
-    Console.WriteLine($"INCHES 12.0 to Base: {inchBase:F1}");
+    double lbToKg = QuantityWeight.Convert(2.0, WeightUnit.POUND, WeightUnit.KILOGRAM);
+    Console.WriteLine($"Quantity(2.0, POUND) to KILOGRAM: {lbToKg:F6} {WeightUnit.KILOGRAM}");
+
+    double gToLb = QuantityWeight.Convert(500.0, WeightUnit.GRAM, WeightUnit.POUND);
+    Console.WriteLine($"Quantity(500.0, GRAM) to POUND: {gToLb:F5} {WeightUnit.POUND}");
+
+    double zeroKgToG = QuantityWeight.Convert(0.0, WeightUnit.KILOGRAM, WeightUnit.GRAM);
+    Console.WriteLine($"Quantity(0.0, KILOGRAM) to GRAM: {zeroKgToG:F1} {WeightUnit.GRAM}");
+
+    var sumW1 = QuantityWeight.Add(new QuantityWeight(1.0, WeightUnit.KILOGRAM), new QuantityWeight(2.0, WeightUnit.KILOGRAM));
+    Console.WriteLine($"Add 1.0 KILOGRAM + 2.0 KILOGRAM: {sumW1.Value:F1} {sumW1.Unit}");
+
+    var sumW2 = QuantityWeight.Add(new QuantityWeight(1.0, WeightUnit.KILOGRAM), new QuantityWeight(1000.0, WeightUnit.GRAM));
+    Console.WriteLine($"Add 1.0 KILOGRAM + 1000.0 GRAM: {sumW2.Value:F1} {sumW2.Unit}");
+
+    var sumW3 = QuantityWeight.Add(new QuantityWeight(500.0, WeightUnit.GRAM), new QuantityWeight(0.5, WeightUnit.KILOGRAM));
+    Console.WriteLine($"Add 500.0 GRAM + 0.5 KILOGRAM: {sumW3.Value:F1} {sumW3.Unit}");
+
+    var sumW4 = QuantityWeight.Add(new QuantityWeight(1.0, WeightUnit.KILOGRAM), new QuantityWeight(1000.0, WeightUnit.GRAM), WeightUnit.GRAM);
+    Console.WriteLine($"Add 1.0 KILOGRAM + 1000.0 GRAM (to GRAM): {sumW4.Value:F1} {sumW4.Unit}");
+
+    var sumW5 = QuantityWeight.Add(new QuantityWeight(1.0, WeightUnit.POUND), new QuantityWeight(453.592, WeightUnit.GRAM), WeightUnit.POUND);
+    Console.WriteLine($"Add 1.0 POUND + 453.592 GRAM (to POUND): {sumW5.Value:F1} {sumW5.Unit}");
+
+    var sumW6 = QuantityWeight.Add(new QuantityWeight(2.0, WeightUnit.KILOGRAM), new QuantityWeight(4.0, WeightUnit.POUND), WeightUnit.KILOGRAM);
+    Console.WriteLine($"Add 2.0 KILOGRAM + 4.0 POUND (to KILOGRAM): {sumW6.Value:F2} {sumW6.Unit}");
+
+    var kgObj = new QuantityWeight(1.0, WeightUnit.KILOGRAM);
+    var ftObj = new QuantityLength(1.0, LengthUnit.FEET);
+    Console.WriteLine($"Quantity(1.0, KILOGRAM) equals Quantity(1.0, FOOT): {kgObj.Equals(ftObj)}");
 }
 catch (ArgumentException ex)
 {

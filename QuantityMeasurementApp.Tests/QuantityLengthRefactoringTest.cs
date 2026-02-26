@@ -5,7 +5,7 @@ using QuantityMeasurementApp.models;
 using System;
 
 [TestClass]
-public class QuantityRefactoredArchitectureTests
+public class QuantityLengthRefactoringTest
 {
     private const double Epsilon = 1e-4;
 
@@ -60,8 +60,7 @@ public class QuantityRefactoredArchitectureTests
         Assert.AreEqual(1.0, LengthUnit.CENTIMETER.ConvertToBaseUnit(30.48), Epsilon);
     }
 
-    // --- Convert From Base (Feet) Tests ---
-
+   
     [TestMethod]
     public void TestConvertFromBaseUnit_FeetToFeet()
     {
@@ -123,7 +122,6 @@ public class QuantityRefactoredArchitectureTests
         Assert.Throws<ArgumentException>(() => 
             QuantityLength.Convert(double.NaN, LengthUnit.FEET, LengthUnit.INCH));
     }
-
    
 
     [TestMethod]
