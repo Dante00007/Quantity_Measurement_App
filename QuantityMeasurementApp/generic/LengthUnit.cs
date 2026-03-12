@@ -1,5 +1,5 @@
 
-namespace QuantityMeasurementApp.models
+namespace QuantityMeasurementApp.generic
 {
     public enum LengthUnit 
     {

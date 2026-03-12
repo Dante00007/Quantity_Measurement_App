@@ -74,7 +74,7 @@ public class QuantityWeightAllTests
         var a = new QuantityWeight(1.0, WeightUnit.KILOGRAM);
         var b = new QuantityWeight(1000.0, WeightUnit.GRAM);
         var c = new QuantityWeight(1.0, WeightUnit.KILOGRAM);
-        
+
         Assert.IsTrue(a.Equals(b));
         Assert.IsTrue(b.Equals(c));
         Assert.IsTrue(a.Equals(c));
