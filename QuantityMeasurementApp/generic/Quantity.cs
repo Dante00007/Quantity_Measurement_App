@@ -1,8 +1,7 @@
-
+using QuantityMeasurementApp.generic;
 
 namespace QuantityMeasurementApp.generic
 {
-  
     public sealed class Quantity<U> where U : Enum
     {
         private readonly double _value;
@@ -20,7 +19,6 @@ namespace QuantityMeasurementApp.generic
         public double Value => _value;
         public U Unit => _unit;
 
-
         private enum ArithmeticOperation
         {
             ADD,
@@ -28,14 +26,17 @@ namespace QuantityMeasurementApp.generic
             DIVIDE
         }
 
-
-        private void ValidateArithmeticOperands(Quantity<U> other, U targetUnit, bool targetRequired)
+        private void ValidateArithmeticOperands(Quantity<U> other, U targetUnit, bool targetRequired, string operation)
         {
             if (other == null)
                 throw new ArgumentException("Operand cannot be null");
 
             if (targetRequired && targetUnit == null)
                 throw new ArgumentException("Target unit cannot be null");
+
+            // Step 2 & 4: Check for Temperature arithmetic support
+            if (_unit is TemperatureUnit tempUnit)
+                tempUnit.ValidateOperationSupport(operation);
 
             if (double.IsNaN(_value) || double.IsInfinity(_value))
                 throw new ArgumentException("Invalid value");
@@ -55,6 +56,9 @@ namespace QuantityMeasurementApp.generic
             if (_unit is VolumeUnit volumeUnit)
                 return volumeUnit.ConvertToBaseUnit(_value);
 
+            if (_unit is TemperatureUnit tempUnit)
+                return tempUnit.ConvertToBaseUnit(_value);
+
             throw new ArgumentException("Unsupported unit type");
         }
 
@@ -63,13 +67,16 @@ namespace QuantityMeasurementApp.generic
             double result;
 
             if (targetUnit is LengthUnit lengthUnit)
-                result = lengthUnit.ConvertToBaseUnit(baseValue);
+                result = lengthUnit.ConvertFromBaseUnit(baseValue);
 
             else if (targetUnit is WeightUnit weightUnit)
-                result = weightUnit.ConvertToBaseUnit(baseValue);
+                result = weightUnit.ConvertFromBaseUnit(baseValue);
 
             else if (targetUnit is VolumeUnit volumeUnit)
-                result = volumeUnit.ConvertToBaseUnit(baseValue);
+                result = volumeUnit.ConvertFromBaseUnit(baseValue);
+
+            else if (targetUnit is TemperatureUnit tempUnit)
+                result = tempUnit.ConvertFromBaseUnit(baseValue);
 
             else
                 throw new ArgumentException("Unsupported unit");
@@ -77,18 +84,14 @@ namespace QuantityMeasurementApp.generic
             return new Quantity<U>(Math.Round(result, 2), targetUnit);
         }
 
-        
         public Quantity<U> ConvertTo(U targetUnit)
         {
             if (targetUnit == null)
                 throw new ArgumentException("Target unit cannot be null");
 
             double baseValue = ConvertToBase();
-
             return ConvertFromBase(baseValue, targetUnit);
         }
-
-        
 
         private double PerformBaseArithmetic(Quantity<U> other, ArithmeticOperation operation)
         {
@@ -113,50 +116,37 @@ namespace QuantityMeasurementApp.generic
             }
         }
 
-      
-
         public Quantity<U> Add(Quantity<U> other)
         {
-            ValidateArithmeticOperands(other, _unit, false);
-
+            ValidateArithmeticOperands(other, _unit, false, "Addition");
             double result = PerformBaseArithmetic(other, ArithmeticOperation.ADD);
-
             return ConvertFromBase(result, _unit);
         }
 
         public Quantity<U> Add(Quantity<U> other, U targetUnit)
         {
-            ValidateArithmeticOperands(other, targetUnit, true);
-
+            ValidateArithmeticOperands(other, targetUnit, true, "Addition");
             double result = PerformBaseArithmetic(other, ArithmeticOperation.ADD);
-
             return ConvertFromBase(result, targetUnit);
         }
 
         public Quantity<U> Subtract(Quantity<U> other)
         {
-            ValidateArithmeticOperands(other, _unit, false);
-
+            ValidateArithmeticOperands(other, _unit, false, "Subtraction");
             double result = PerformBaseArithmetic(other, ArithmeticOperation.SUBTRACT);
-
             return ConvertFromBase(result, _unit);
         }
 
         public Quantity<U> Subtract(Quantity<U> other, U targetUnit)
         {
-            ValidateArithmeticOperands(other, targetUnit, true);
-
+            ValidateArithmeticOperands(other, targetUnit, true, "Subtraction");
             double result = PerformBaseArithmetic(other, ArithmeticOperation.SUBTRACT);
-
             return ConvertFromBase(result, targetUnit);
         }
 
-     
-
         public double Divide(Quantity<U> other)
         {
-            ValidateArithmeticOperands(other, _unit, false);
-
+            ValidateArithmeticOperands(other, _unit, false, "Division");
             return PerformBaseArithmetic(other, ArithmeticOperation.DIVIDE);
         }
 
@@ -166,7 +156,6 @@ namespace QuantityMeasurementApp.generic
                 return false;
 
             Quantity<U> other = (Quantity<U>)obj;
-
             return Math.Abs(ConvertToBase() - other.ConvertToBase()) < 0.0001;
         }
 

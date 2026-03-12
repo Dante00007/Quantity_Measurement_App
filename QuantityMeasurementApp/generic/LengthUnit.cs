@@ -1,6 +1,7 @@
-
 namespace QuantityMeasurementApp.generic
 {
+    public delegate bool SupportsArithmetic();
+
     public enum LengthUnit 
     {
         FEET,
@@ -11,6 +12,16 @@ namespace QuantityMeasurementApp.generic
 
     public static class LengthUnitExtensions 
     {
+        private static readonly SupportsArithmetic _supportsArithmetic = () => true;
+
+        public static void ValidateOperationSupport(this LengthUnit unit, string operation)
+        {
+            if (!_supportsArithmetic())
+            {
+                throw new InvalidOperationException($"{operation} is not supported for Length units.");
+            }
+        }
+
         public static double GetFactor(this LengthUnit unit)
         {
             return unit switch
@@ -27,6 +38,7 @@ namespace QuantityMeasurementApp.generic
         {
             return value * unit.GetFactor();
         }
+
         public static double ConvertFromBaseUnit(this LengthUnit unit, double baseValue)
         {
             return baseValue / unit.GetFactor();
