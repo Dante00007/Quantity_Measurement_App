@@ -1,185 +1,183 @@
-namespace QuantityMeasurementApp.generic;
 
-public class Quantity<U> where U : Enum
+
+namespace QuantityMeasurementApp.generic
 {
-    private readonly double _value;
-    private readonly U _unit;
-
-    public Quantity(double value, U unit)
-    {
-        if (unit == null) throw new ArgumentException("Unit cannot be null.");
-        if (!double.IsFinite(value)) throw new ArgumentException("Value must be a finite number.");
-        
-        _value = value;
-        _unit = unit;
-    }
-
-    public double Value => _value;
-    public U Unit => _unit;
-
-    private double GetValueInBaseUnit()
-    {
-        if (_unit is WeightUnit weightUnit) return weightUnit.ConvertToBaseUnit(_value);
-        if (_unit is LengthUnit lengthUnit) return lengthUnit.ConvertToBaseUnit(_value);
-        if (_unit is VolumeUnit volumeUnit) return volumeUnit.ConvertToBaseUnit(_value);
-
-        throw new ArgumentException("Invalid Unit");
-    }
-
-    public override bool Equals(object? obj)
-    {
-        if (ReferenceEquals(this, obj)) return true;
-        if (obj is not Quantity<U> other) return false;
-
-        return Math.Abs(this.GetValueInBaseUnit() - other.GetValueInBaseUnit()) < 0.001;
-    }
-
-    public override int GetHashCode()
-    {
-        return GetValueInBaseUnit().GetHashCode();
-    }
-
-    public static double Convert(double value, U sourceUnit, U targetUnit)
-    {
-        if (!double.IsFinite(value))
-            throw new ArgumentException("Value must be a finite number.");
-
-        double baseValue;
-        if (sourceUnit is WeightUnit weightUnit) baseValue = weightUnit.ConvertToBaseUnit(value);
-        else if (sourceUnit is LengthUnit lengthUnit) baseValue = lengthUnit.ConvertToBaseUnit(value);
-        else if (sourceUnit is VolumeUnit volumeUnit) baseValue = volumeUnit.ConvertToBaseUnit(value);
-        else throw new ArgumentException("Invalid Unit");
-
-        double targetValue;
-        if (targetUnit is WeightUnit weightUnit2) targetValue = weightUnit2.ConvertFromBaseUnit(baseValue);
-        else if (targetUnit is LengthUnit lengthUnit2) targetValue = lengthUnit2.ConvertFromBaseUnit(baseValue);
-        else if (targetUnit is VolumeUnit volumeUnit2) targetValue = volumeUnit2.ConvertFromBaseUnit(baseValue);
-        else throw new ArgumentException("Invalid Unit");
-
-        return Math.Round(targetValue, 6);
-    }
-
-    private static double AddInBaseUnit(Quantity<U> quantity1, Quantity<U> quantity2)
-    {
-        if (quantity1 == null || quantity2 == null)
-            throw new ArgumentException("Quantities cannot be null.");
-
-        return quantity1.GetValueInBaseUnit() + quantity2.GetValueInBaseUnit();
-    }
-
-    public static Quantity<U> Add(Quantity<U> quantity1, Quantity<U> quantity2)
-    {
-        double resultInBase = AddInBaseUnit(quantity1, quantity2);
-        U targetUnit = quantity1.Unit;
-
-        if (quantity1.Unit is WeightUnit weightUnit)
-        {
-            double newValue = Math.Round(weightUnit.ConvertFromBaseUnit(resultInBase), 4);
-            return new Quantity<U>(newValue, targetUnit);
-        }
-        else if (quantity1.Unit is LengthUnit lengthUnit)
-        {
-            double newValue = Math.Round(lengthUnit.ConvertFromBaseUnit(resultInBase), 4);
-            return new Quantity<U>(newValue, targetUnit);
-        }
-        else if (quantity1.Unit is VolumeUnit volumeUnit)
-        {
-            double newValue = Math.Round(volumeUnit.ConvertFromBaseUnit(resultInBase), 4);
-            return new Quantity<U>(newValue, targetUnit);
-        }
-        else throw new ArgumentException("Invalid Unit");
-    }
-
-    public static Quantity<U> Add(Quantity<U> quantity1, Quantity<U> quantity2, U targetUnit)
-    {
-        double resultInBase = AddInBaseUnit(quantity1, quantity2);
-
-        if (quantity1.Unit is WeightUnit)
-        {
-            double newValue = 0;
-            if (targetUnit is WeightUnit weightUnit)
-                newValue = Math.Round(weightUnit.ConvertFromBaseUnit(resultInBase), 4);
-            return new Quantity<U>(newValue, targetUnit);
-        }
-        else if (quantity1.Unit is LengthUnit)
-        {
-            double newValue = 0;
-            if (targetUnit is LengthUnit lengthUnit)
-                newValue = Math.Round(lengthUnit.ConvertFromBaseUnit(resultInBase), 4);
-            return new Quantity<U>(newValue, targetUnit);
-        }
-        else if (quantity1.Unit is VolumeUnit)
-        {
-            double newValue = 0;
-            if (targetUnit is VolumeUnit volumeUnit)
-                newValue = Math.Round(volumeUnit.ConvertFromBaseUnit(resultInBase), 4);
-            return new Quantity<U>(newValue, targetUnit);
-        }
-        else throw new ArgumentException("Invalid Unit");
-    }
-
-    
-
-    public static Quantity<U> Subtract(Quantity<U> quantity1, Quantity<U> quantity2)
-    {
-        double resultInBase = quantity1.GetValueInBaseUnit() - quantity2.GetValueInBaseUnit();
-        U targetUnit = quantity1.Unit;
-
-        if (quantity1.Unit is WeightUnit weightUnit)
-        {
-            double newValue = Math.Round(weightUnit.ConvertFromBaseUnit(resultInBase), 4);
-            return new Quantity<U>(newValue, targetUnit);
-        }
-        else if (quantity1.Unit is LengthUnit lengthUnit)
-        {
-            double newValue = Math.Round(lengthUnit.ConvertFromBaseUnit(resultInBase), 4);
-            return new Quantity<U>(newValue, targetUnit);
-        }
-        else if (quantity1.Unit is VolumeUnit volumeUnit)
-        {
-            double newValue = Math.Round(volumeUnit.ConvertFromBaseUnit(resultInBase), 4);
-            return new Quantity<U>(newValue, targetUnit);
-        }
-        else throw new ArgumentException("Invalid Unit");
-    }
-
-    public static Quantity<U> Subtract(Quantity<U> quantity1, Quantity<U> quantity2, U targetUnit)
-    {
-        double resultInBase = quantity1.GetValueInBaseUnit() - quantity2.GetValueInBaseUnit();
-
-        if (quantity1.Unit is WeightUnit)
-        {
-            double newValue = 0;
-            if (targetUnit is WeightUnit weightUnit)
-                newValue = Math.Round(weightUnit.ConvertFromBaseUnit(resultInBase), 4);
-            return new Quantity<U>(newValue, targetUnit);
-        }
-        else if (quantity1.Unit is LengthUnit)
-        {
-            double newValue = 0;
-            if (targetUnit is LengthUnit lengthUnit)
-                newValue = Math.Round(lengthUnit.ConvertFromBaseUnit(resultInBase), 4);
-            return new Quantity<U>(newValue, targetUnit);
-        }
-        else if (quantity1.Unit is VolumeUnit)
-        {
-            double newValue = 0;
-            if (targetUnit is VolumeUnit volumeUnit)
-                newValue = Math.Round(volumeUnit.ConvertFromBaseUnit(resultInBase), 4);
-            return new Quantity<U>(newValue, targetUnit);
-        }
-        else throw new ArgumentException("Invalid Unit");
-    }
-
   
-
-    public static double Divide(Quantity<U> quantity1, Quantity<U> quantity2)
+    public sealed class Quantity<U> where U : Enum
     {
-        if (quantity1 == null || quantity2 == null) throw new ArgumentException("Quantities cannot be null.");
-        
-        double val2Base = quantity2.GetValueInBaseUnit();
-        if (Math.Abs(val2Base) < 1e-9) throw new DivideByZeroException("Cannot divide by zero quantity.");
+        private readonly double _value;
+        private readonly U _unit;
 
-        return quantity1.GetValueInBaseUnit() / val2Base;
+        public Quantity(double value, U unit)
+        {
+            if (double.IsNaN(value) || double.IsInfinity(value))
+                throw new ArgumentException("Invalid measurement value");
+
+            _value = value;
+            _unit = unit;
+        }
+
+        public double Value => _value;
+        public U Unit => _unit;
+
+
+        private enum ArithmeticOperation
+        {
+            ADD,
+            SUBTRACT,
+            DIVIDE
+        }
+
+
+        private void ValidateArithmeticOperands(Quantity<U> other, U targetUnit, bool targetRequired)
+        {
+            if (other == null)
+                throw new ArgumentException("Operand cannot be null");
+
+            if (targetRequired && targetUnit == null)
+                throw new ArgumentException("Target unit cannot be null");
+
+            if (double.IsNaN(_value) || double.IsInfinity(_value))
+                throw new ArgumentException("Invalid value");
+
+            if (double.IsNaN(other._value) || double.IsInfinity(other._value))
+                throw new ArgumentException("Invalid value");
+        }
+
+        private double ConvertToBase()
+        {
+            if (_unit is LengthUnit lengthUnit)
+                return lengthUnit.ConvertToBaseUnit(_value);
+
+            if (_unit is WeightUnit weightUnit)
+                return weightUnit.ConvertToBaseUnit(_value);
+
+            if (_unit is VolumeUnit volumeUnit)
+                return volumeUnit.ConvertToBaseUnit(_value);
+
+            throw new ArgumentException("Unsupported unit type");
+        }
+
+        private Quantity<U> ConvertFromBase(double baseValue, U targetUnit)
+        {
+            double result;
+
+            if (targetUnit is LengthUnit lengthUnit)
+                result = lengthUnit.ConvertToBaseUnit(baseValue);
+
+            else if (targetUnit is WeightUnit weightUnit)
+                result = weightUnit.ConvertToBaseUnit(baseValue);
+
+            else if (targetUnit is VolumeUnit volumeUnit)
+                result = volumeUnit.ConvertToBaseUnit(baseValue);
+
+            else
+                throw new ArgumentException("Unsupported unit");
+
+            return new Quantity<U>(Math.Round(result, 2), targetUnit);
+        }
+
+        
+        public Quantity<U> ConvertTo(U targetUnit)
+        {
+            if (targetUnit == null)
+                throw new ArgumentException("Target unit cannot be null");
+
+            double baseValue = ConvertToBase();
+
+            return ConvertFromBase(baseValue, targetUnit);
+        }
+
+        
+
+        private double PerformBaseArithmetic(Quantity<U> other, ArithmeticOperation operation)
+        {
+            double base1 = ConvertToBase();
+            double base2 = other.ConvertToBase();
+
+            switch (operation)
+            {
+                case ArithmeticOperation.ADD:
+                    return base1 + base2;
+
+                case ArithmeticOperation.SUBTRACT:
+                    return base1 - base2;
+
+                case ArithmeticOperation.DIVIDE:
+                    if (base2 == 0)
+                        throw new ArithmeticException("Division by zero");
+                    return base1 / base2;
+
+                default:
+                    throw new ArgumentException("Invalid operation");
+            }
+        }
+
+      
+
+        public Quantity<U> Add(Quantity<U> other)
+        {
+            ValidateArithmeticOperands(other, _unit, false);
+
+            double result = PerformBaseArithmetic(other, ArithmeticOperation.ADD);
+
+            return ConvertFromBase(result, _unit);
+        }
+
+        public Quantity<U> Add(Quantity<U> other, U targetUnit)
+        {
+            ValidateArithmeticOperands(other, targetUnit, true);
+
+            double result = PerformBaseArithmetic(other, ArithmeticOperation.ADD);
+
+            return ConvertFromBase(result, targetUnit);
+        }
+
+        public Quantity<U> Subtract(Quantity<U> other)
+        {
+            ValidateArithmeticOperands(other, _unit, false);
+
+            double result = PerformBaseArithmetic(other, ArithmeticOperation.SUBTRACT);
+
+            return ConvertFromBase(result, _unit);
+        }
+
+        public Quantity<U> Subtract(Quantity<U> other, U targetUnit)
+        {
+            ValidateArithmeticOperands(other, targetUnit, true);
+
+            double result = PerformBaseArithmetic(other, ArithmeticOperation.SUBTRACT);
+
+            return ConvertFromBase(result, targetUnit);
+        }
+
+     
+
+        public double Divide(Quantity<U> other)
+        {
+            ValidateArithmeticOperands(other, _unit, false);
+
+            return PerformBaseArithmetic(other, ArithmeticOperation.DIVIDE);
+        }
+
+        public override bool Equals(object? obj)
+        {
+            if (obj == null || obj.GetType() != typeof(Quantity<U>))
+                return false;
+
+            Quantity<U> other = (Quantity<U>)obj;
+
+            return Math.Abs(ConvertToBase() - other.ConvertToBase()) < 0.0001;
+        }
+
+        public override int GetHashCode()
+        {
+            return ConvertToBase().GetHashCode();
+        }
+
+        public override string ToString()
+        {
+            return $"{_value} {_unit}";
+        }
     }
 }
