@@ -1,0 +1,16 @@
+D:\QuantityMeasurement\QuantityMeasurementAppRepoLayer\bin\Debug\net10.0\QuantityMeasurementAppRepoLayer.deps.json
+D:\QuantityMeasurement\QuantityMeasurementAppRepoLayer\bin\Debug\net10.0\QuantityMeasurementAppRepoLayer.dll
+D:\QuantityMeasurement\QuantityMeasurementAppRepoLayer\bin\Debug\net10.0\QuantityMeasurementAppRepoLayer.pdb
+D:\QuantityMeasurement\QuantityMeasurementAppRepoLayer\bin\Debug\net10.0\QuantityMeasurementAppModelLayer.dll
+D:\QuantityMeasurement\QuantityMeasurementAppRepoLayer\bin\Debug\net10.0\QuantityMeasurementAppModelLayer.pdb
+D:\QuantityMeasurement\QuantityMeasurementAppRepoLayer\obj\Debug\net10.0\QuantityMeasurementAppRepoLayer.csproj.AssemblyReference.cache
+D:\QuantityMeasurement\QuantityMeasurementAppRepoLayer\obj\Debug\net10.0\QuantityMeasurementAppRepoLayer.GeneratedMSBuildEditorConfig.editorconfig
+D:\QuantityMeasurement\QuantityMeasurementAppRepoLayer\obj\Debug\net10.0\QuantityMeasurementAppRepoLayer.AssemblyInfoInputs.cache
+D:\QuantityMeasurement\QuantityMeasurementAppRepoLayer\obj\Debug\net10.0\QuantityMeasurementAppRepoLayer.AssemblyInfo.cs
+D:\QuantityMeasurement\QuantityMeasurementAppRepoLayer\obj\Debug\net10.0\QuantityMeasurementAppRepoLayer.csproj.CoreCompileInputs.cache
+D:\QuantityMeasurement\QuantityMeasurementAppRepoLayer\obj\Debug\net10.0\QuantityMeasurementAppRepoLayer.sourcelink.json
+D:\QuantityMeasurement\QuantityMeasurementAppRepoLayer\obj\Debug\net10.0\Quantity.DF782B44.Up2Date
+D:\QuantityMeasurement\QuantityMeasurementAppRepoLayer\obj\Debug\net10.0\QuantityMeasurementAppRepoLayer.dll
+D:\QuantityMeasurement\QuantityMeasurementAppRepoLayer\obj\Debug\net10.0\refint\QuantityMeasurementAppRepoLayer.dll
+D:\QuantityMeasurement\QuantityMeasurementAppRepoLayer\obj\Debug\net10.0\QuantityMeasurementAppRepoLayer.pdb
+D:\QuantityMeasurement\QuantityMeasurementAppRepoLayer\obj\Debug\net10.0\ref\QuantityMeasurementAppRepoLayer.dll
