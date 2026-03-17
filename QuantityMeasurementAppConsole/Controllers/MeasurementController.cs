@@ -1,5 +1,5 @@
 using QuantityMeasurementAppBusinessLayer.Services;
-using QuantityMeasurementAppModelLayer.Core;
+using QuantityMeasurementAppModelLayer.Entity;
 using QuantityMeasurementAppModelLayer.Units;
 
 namespace QuantityMeasurementAppConsole.Controllers
@@ -13,13 +13,13 @@ namespace QuantityMeasurementAppConsole.Controllers
             _service = new MeasurementService();
         }
 
-        public void HandleConversion<U>(Quantity<U> q, U toUnit) where U : Enum
+        public void HandleConversion(QuantityDTO q, string toUnit) 
         {
             var result = _service.PerformConversion(q, toUnit);
             Console.WriteLine($"\n[RESULT] {q.Value} {q.Unit} is equal to {result.Value} {result.Unit}");
         }
 
-        public void HandleAddition<U>(Quantity<U> q1, Quantity<U> q2, U target) where U : Enum
+        public void HandleAddition(QuantityDTO q1, QuantityDTO q2, string target) 
         {
             try
             {
@@ -29,10 +29,11 @@ namespace QuantityMeasurementAppConsole.Controllers
             catch (InvalidOperationException ex)
             {
                 Console.WriteLine($"\n[ERROR] {ex.Message}");
+                Console.WriteLine($"\n[ERROR] {ex.StackTrace}");
             }
         }
 
-        public void HandleSubtraction<U>(Quantity<U> q1, Quantity<U> q2, U target) where U : Enum
+        public void HandleSubtraction(QuantityDTO q1, QuantityDTO q2, string target)
         {
             try
             {
