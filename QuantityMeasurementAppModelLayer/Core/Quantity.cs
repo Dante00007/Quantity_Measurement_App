@@ -1,5 +1,5 @@
 using QuantityMeasurementAppModelLayer.Units;
-using QuantityMeasurementAppModelLayer.Entity;
+using QuantityMeasurementAppModelLayer.DTO;
 
 namespace QuantityMeasurementAppModelLayer.Core
 {

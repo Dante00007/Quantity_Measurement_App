@@ -1,5 +1,7 @@
 using QuantityMeasurementAppModelLayer.Core;
 using QuantityMeasurementAppModelLayer.Entity;
+using QuantityMeasurementAppModelLayer.DTO;
+using QuantityMeasurementAppModelLayer.Util;
 using QuantityMeasurementAppModelLayer.Units;
 using QuantityMeasurementAppRepoLayer;
 
@@ -11,9 +13,10 @@ namespace QuantityMeasurementAppBusinessLayer.Services
 
         public MeasurementService()
         {
+
             _repository = new MeasurementHistoryRepository();
         }
-        public QuantityDTO PerformConversion(QuantityDTO q, string toUnit) 
+        public QuantityDTO PerformConversion(QuantityDTO q, string toUnit)
         {
             Type unitType = GetUnitFromIndex(q.EnumIndex);
             Enum unit = (Enum)Enum.Parse(unitType, q.Unit);
@@ -29,8 +32,8 @@ namespace QuantityMeasurementAppBusinessLayer.Services
         public QuantityDTO PerformAddition(QuantityDTO q1, QuantityDTO q2, string toUnit)
         {
             Type unitType = GetUnitFromIndex(q1.EnumIndex);
-            Enum unit1 =(Enum) Enum.Parse(unitType, q1.Unit);
-            Enum unit2 =(Enum) Enum.Parse(unitType, q2.Unit);
+            Enum unit1 = (Enum)Enum.Parse(unitType, q1.Unit);
+            Enum unit2 = (Enum)Enum.Parse(unitType, q2.Unit);
             Enum targetUnit = (Enum)Enum.Parse(unitType, toUnit);
 
             Quantity quantity1 = new Quantity(q1.Value, unit1);
@@ -69,7 +72,7 @@ namespace QuantityMeasurementAppBusinessLayer.Services
             return quantity1.Equals(quantity2);
         }
 
-        private void AddToHistory(QuantityDTO q1, QuantityDTO? q2, QuantityDTO result,string operation)
+        private void AddToHistory(QuantityDTO q1, QuantityDTO? q2, QuantityDTO result, string operation)
         {
             QuantityMeasurementHistoryEntity history = new QuantityMeasurementHistoryEntity();
 
@@ -80,8 +83,8 @@ namespace QuantityMeasurementAppBusinessLayer.Services
             history.TargetUnit = result.Unit;
             history.Operation = operation;
             history.ResultValue = result.Value;
-            history.ResultUnit = result.Unit;;
-    
+            history.ResultUnit = result.Unit; ;
+
             _repository.SaveHistory(history);
         }
         private Type GetUnitFromIndex(int index)

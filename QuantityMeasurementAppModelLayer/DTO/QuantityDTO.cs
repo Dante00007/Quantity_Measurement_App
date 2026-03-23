@@ -1,4 +1,4 @@
-namespace QuantityMeasurementAppModelLayer.Entity
+namespace QuantityMeasurementAppModelLayer.DTO
 {
     public class QuantityDTO
     {

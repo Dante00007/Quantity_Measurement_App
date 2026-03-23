@@ -1,5 +1,5 @@
 using QuantityMeasurementAppBusinessLayer.Services;
-using QuantityMeasurementAppModelLayer.Entity;
+using QuantityMeasurementAppModelLayer.DTO;
 using QuantityMeasurementAppModelLayer.Units;
 
 namespace QuantityMeasurementAppConsole.Controllers
