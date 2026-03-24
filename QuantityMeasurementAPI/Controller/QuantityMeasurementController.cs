@@ -3,17 +3,21 @@ using Microsoft.AspNetCore.Http;
 using QuantityMeasurementAppModelLayer.Entity;
 using QuantityMeasurementAppModelLayer.DTO;
 using QuantityMeasurementAppBusinessLayer.Services;
+using QuantityMeasurementAppBusinessLayer.Interface;
+using Microsoft.AspNetCore.Authorization;
+
 
 namespace QuantityMeasurementAPI.Controller;
 
 [Route("api/")]
 [ApiController]
+[Authorize]
 public class QuantityMeasurementController : ControllerBase
 {
     private readonly IMeasurementService _measurementService;
-    public QuantityMeasurementController()
+    public QuantityMeasurementController(IMeasurementService measurementService)
     {
-        _measurementService = new MeasurementService();
+        _measurementService = measurementService;
     }
 
     [HttpPost("conversion")]

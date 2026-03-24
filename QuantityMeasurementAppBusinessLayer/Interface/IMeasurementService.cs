@@ -1,7 +1,7 @@
 using QuantityMeasurementAppModelLayer.Entity;
 using QuantityMeasurementAppModelLayer.DTO;
 
-namespace QuantityMeasurementAppBusinessLayer.Services
+namespace QuantityMeasurementAppBusinessLayer.Interface
 {
     public interface IMeasurementService
     {

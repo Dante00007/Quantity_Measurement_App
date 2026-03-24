@@ -1,6 +1,7 @@
 using QuantityMeasurementAppModelLayer.Entity;
 using Microsoft.Data.SqlClient;
 using QuantityMeasurementAppModelLayer.Util;
+using QuantityMeasurementAppRepoLayer.Exceptions;
 
 namespace QuantityMeasurementAppRepoLayer;
 
@@ -39,5 +40,67 @@ public class MeasurementHistoryRepository : IMeasurementHistoryRepository
 
     }
 
+    public bool SaveUser(UserEntity user)
+    {
+        try
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                string query = @"INSERT INTO [User] (FullName, Password, Email, Phone) 
+                             VALUES (@fullName, @password, @email, @phone)";
 
+                using (SqlCommand cmd = new SqlCommand(query, connection))
+                {
+                    cmd.Parameters.AddWithValue("@fullName", user.FullName);
+                    cmd.Parameters.AddWithValue("@password", user.Password);
+                    cmd.Parameters.AddWithValue("@email", user.Email);
+                    cmd.Parameters.AddWithValue("@phone", user.Phone);
+
+                    connection.Open();
+                    int rowsAffected = cmd.ExecuteNonQuery();
+
+                    if (rowsAffected == 0)
+                        throw new DatabaseOperationException("Failed to save user to the database.");
+
+                    return true;
+                }
+            }
+        }
+        catch (SqlException ex) when (ex.Number == 2627 || ex.Number == 2601)
+        {
+            // 2627 and 2601 are SQL codes for Unique Constraint violations
+            throw new UserAlreadyExistsException(user.Email);
+        }
+    }
+    public UserEntity VerifyUser(string email)
+    {
+        using (SqlConnection connection = new SqlConnection(_connectionString))
+        {
+            string query = @"SELECT * FROM [User] WHERE Email = @email";
+
+            using (SqlCommand cmd = new SqlCommand(query, connection))
+            {
+                cmd.Parameters.AddWithValue("@email", email);
+
+                connection.Open();
+
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        UserEntity user = new UserEntity();
+                        user.Id = reader.GetInt32(0);
+                        user.FullName = reader.GetString(1);
+                        user.Password = reader.GetString(2);
+                        user.Email = reader.GetString(3);
+                        user.Phone = reader.GetString(4);
+
+                        return user;
+                    }
+                }
+
+            }
+            throw new UserNotFoundException($"User Not Found {email}");
+        }
+    }
 }

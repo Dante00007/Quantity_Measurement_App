@@ -1,20 +1,32 @@
 using Microsoft.AspNetCore.Mvc;
+using QuantityMeasurementAppBusinessLayer.Interface;
 using QuantityMeasurementAppBusinessLayer.Services;
+using QuantityMeasurementAppModelLayer.DTO;
 
 [Route("auth")]
 [ApiController]
 public class AuthController : ControllerBase
 {
-    private readonly IMeasurementService _measurementServices;
-    public AuthController()
+    private readonly IAuthService _authServices;
+    public AuthController(IAuthService authServices)
     {
-        _measurementServices = new MeasurementService();
+        _authServices = authServices;
     }
 
-    // [HttpPost("register")]
-    // public IActionResult Register([FromQuery] string userName, [FromQuery] string password)
-    // {
-    //     var res = _measurementServices(userName, password);
-    //     return Ok(res);
-    // }
+    [HttpPost("register")]
+    public IActionResult Register([FromBody] RegisterDTO registerDTO)
+    {
+
+        var res = _authServices.Register(registerDTO);
+        return Ok(res);
+
+    }
+
+    [HttpPost("login")]
+    public IActionResult Login([FromBody] LoginDTO loginDTO)
+    {
+
+        var res = _authServices.Login(loginDTO);
+        return Ok(res);
+    }
 }
