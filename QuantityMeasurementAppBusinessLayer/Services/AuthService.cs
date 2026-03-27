@@ -1,9 +1,11 @@
-using QuantityMeasurementAppRepoLayer;
 using Microsoft.AspNetCore.Identity; 
+
+using QuantityMeasurementAppRepoLayer.Interface;
+
 using QuantityMeasurementAppModelLayer.DTO;
 using QuantityMeasurementAppModelLayer.Entity;
+
 using QuantityMeasurementAppBusinessLayer.Interface;
-using System.Text.RegularExpressions;
 using QuantityMeasurementAppBusinessLayer.Exceptions;
 
 
@@ -12,10 +14,10 @@ namespace QuantityMeasurementAppBusinessLayer.Services;
 public class AuthService : IAuthService
 {
     private readonly IJwtService _jwtService;
-    private readonly IMeasurementHistoryRepository _repository;
+    private readonly IUserRepository _repository;
     private readonly PasswordHasher<UserEntity> _passwordHasher;
 
-    public AuthService(IJwtService jwtService,IMeasurementHistoryRepository repository)
+    public AuthService(IJwtService jwtService,IUserRepository repository)
     {
         _jwtService = jwtService;
         _repository = repository;
@@ -36,7 +38,7 @@ public class AuthService : IAuthService
     //     }
     //     return true;
     // }
-    public bool Register(RegisterDTO registerDTO)
+    public async Task<bool> Register(RegisterDTO registerDTO)
     {
         var fullName = registerDTO.FullName;
         var password = registerDTO.Password;
@@ -51,14 +53,14 @@ public class AuthService : IAuthService
         user.Phone = phone;
         user.Password = _passwordHasher.HashPassword(user, password);
 
-        return _repository.SaveUser(user);
+        return await _repository.SaveUser(user);
     }
 
-    public string Login(LoginDTO loginDTO){
+    public async Task<string> Login(LoginDTO loginDTO){
         var email = loginDTO.Email;
         var password = loginDTO.Password;
 
-        UserEntity user = _repository.VerifyUser(email);
+        UserEntity? user = await _repository.VerifyUser(email);
 
         if(user != null &&
          _passwordHasher.VerifyHashedPassword(user, user.Password, password) == PasswordVerificationResult.Success)

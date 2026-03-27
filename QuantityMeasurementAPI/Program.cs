@@ -1,12 +1,16 @@
 using QuantityMeasurementAppModelLayer.Util;
 using QuantityMeasurementAppBusinessLayer.Services;
 using QuantityMeasurementAppBusinessLayer.Interface;
-using QuantityMeasurementAppRepoLayer;
+using QuantityMeasurementAppRepoLayer.Context;
+using QuantityMeasurementAppRepoLayer.Interface;
+using QuantityMeasurementAppRepoLayer.Repository;
+
 
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using QuantityMeasurementAPI.Middleware;
+using Microsoft.EntityFrameworkCore;
 
 
 // Add services to the container.
@@ -22,6 +26,13 @@ builder.Services.AddSingleton(jwtSettings);
 
 builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IMeasurementService, MeasurementService>();
+
+// // Repos
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IMeasurementRepository, MeasurementRepository>();
+
+//OLD
 builder.Services.AddScoped<IMeasurementHistoryRepository, MeasurementHistoryRepository>();
 
 
@@ -49,10 +60,16 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-
-
+//for ADO
 string connectionString = builder.Configuration["ConnectionStrings:DefaultConnection"];
 AppConfig.ConnectionString = connectionString;
+
+// for EF
+builder.Services.AddDbContext<AppDbContext>(options=>
+{
+    options.UseSqlServer(connectionString);
+});
+
 
 
 var app = builder.Build();

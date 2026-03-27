@@ -6,7 +6,7 @@ namespace QuantityMeasurementAppBusinessLayer.Interface
 {
     public interface IAuthService
     {
-        bool Register(RegisterDTO registerDTO);
-        string Login(LoginDTO loginDTO);
+        Task<bool> Register(RegisterDTO registerDTO);
+        Task<string> Login(LoginDTO loginDTO);
     }
 }

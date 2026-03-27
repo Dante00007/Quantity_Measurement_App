@@ -14,3 +14,5 @@ D:\QuantityMeasurement\QuantityMeasurementAppRepoLayer\obj\Debug\net10.0\Quantit
 D:\QuantityMeasurement\QuantityMeasurementAppRepoLayer\obj\Debug\net10.0\refint\QuantityMeasurementAppRepoLayer.dll
 D:\QuantityMeasurement\QuantityMeasurementAppRepoLayer\obj\Debug\net10.0\QuantityMeasurementAppRepoLayer.pdb
 D:\QuantityMeasurement\QuantityMeasurementAppRepoLayer\obj\Debug\net10.0\ref\QuantityMeasurementAppRepoLayer.dll
+D:\QuantityMeasurement\QuantityMeasurementAppRepoLayer\bin\Debug\net10.0\QuantityMeasurementAppRepoLayer.runtimeconfig.json
+D:\QuantityMeasurement\QuantityMeasurementAppRepoLayer\obj\Debug\net10.0\QuantityMeasurementAppRepoLayer.genruntimeconfig.cache

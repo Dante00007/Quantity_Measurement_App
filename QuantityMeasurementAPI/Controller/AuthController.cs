@@ -14,19 +14,23 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("register")]
-    public IActionResult Register([FromBody] RegisterDTO registerDTO)
+    public async Task<IActionResult> Register([FromBody] RegisterDTO registerDTO)
     {
 
-        var res = _authServices.Register(registerDTO);
+        var res = await _authServices.Register(registerDTO);
         return Ok(res);
 
     }
 
     [HttpPost("login")]
-    public IActionResult Login([FromBody] LoginDTO loginDTO)
+    public async Task<IActionResult> Login([FromBody] LoginDTO loginDTO)
     {
 
-        var res = _authServices.Login(loginDTO);
+        var res = await _authServices.Login(loginDTO);
+        if (res == null)
+        {
+            return Unauthorized(new { Message = "Invalid email or password." });
+        }
         return Ok(res);
     }
 }
