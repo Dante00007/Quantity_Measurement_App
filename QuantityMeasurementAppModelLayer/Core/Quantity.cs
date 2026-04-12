@@ -151,10 +151,12 @@ namespace QuantityMeasurementAppModelLayer.Core
             return new QuantityDTO(quantity.Value, quantity.Unit.ToString(),-1);
         }
 
-        public double Divide(Quantity other)
+        public QuantityDTO Divide(Quantity other)
         {
             ValidateArithmeticOperands(other, _unit, false, "Division");
-            return PerformBaseArithmetic(other, ArithmeticOperation.DIVIDE);
+            double result = PerformBaseArithmetic(other, ArithmeticOperation.DIVIDE);
+            Quantity quantity = ConvertFromBase(result, _unit);
+            return new QuantityDTO(quantity.Value, quantity.Unit.ToString(),-1);
         }
 
         public override bool Equals(object? obj)

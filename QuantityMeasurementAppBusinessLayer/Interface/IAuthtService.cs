@@ -1,5 +1,4 @@
 
-using QuantityMeasurementAppModelLayer.Entity;
 using QuantityMeasurementAppModelLayer.DTO;
 
 namespace QuantityMeasurementAppBusinessLayer.Interface
@@ -7,6 +6,8 @@ namespace QuantityMeasurementAppBusinessLayer.Interface
     public interface IAuthService
     {
         Task<bool> Register(RegisterDTO registerDTO);
-        Task<string> Login(LoginDTO loginDTO);
+        Task<LoginResponseDTO> Login(LoginDTO loginDTO);
+        Task<LoginResponseDTO> Refresh(string userId,string refreshToken);
+        Task Logout(string userId,string refreshToken);
     }
 }

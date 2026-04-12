@@ -6,6 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 using QuantityMeasurementAppBusinessLayer.Interface;
 using QuantityMeasurementAppModelLayer.Entity;
 using QuantityMeasurementAppModelLayer.Util;
+using System.Security.Cryptography;
 
 namespace QuantityMeasurementAppBusinessLayer.Services
 {
@@ -17,15 +18,16 @@ namespace QuantityMeasurementAppBusinessLayer.Services
         {
             _jwtSettings = jwtSettings;
         }
-        public string GenerateToken(UserEntity user)
+        public string GenerateAccessToken(UserEntity user)
         {
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Key));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-            var claims = new []
+            var claims = new[]
             {
 
                 new Claim(JwtRegisteredClaimNames.Email, user.Email),
+                new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
 
@@ -33,13 +35,42 @@ namespace QuantityMeasurementAppBusinessLayer.Services
                 issuer: _jwtSettings.Issuer,
                 audience: _jwtSettings.Audience,
                 claims: claims,
-                expires: DateTime.Now.AddMinutes(30),
+                expires: DateTime.Now.AddMinutes(10),
                 signingCredentials: creds
             );
 
             var jwtToken = new JwtSecurityTokenHandler().WriteToken(token);
             return jwtToken;
 
+        }
+        public string GenerateRefreshToken()
+        {
+            var randomNumber = new byte[64];
+            using var rng = RandomNumberGenerator.Create();
+            rng.GetBytes(randomNumber);
+            return Convert.ToBase64String(randomNumber);
+        }
+
+        public Guid ExtractUserIdFromToken(string token)
+        {
+            var handler = new JwtSecurityTokenHandler();
+            var jsonToken = handler.ReadToken(token) as JwtSecurityToken;
+
+            if (jsonToken == null)
+            {
+                throw new SecurityTokenException("Invalid token format.");
+            }
+
+            var userIdClaim = jsonToken.Claims.FirstOrDefault(claim =>
+                claim.Type == JwtRegisteredClaimNames.Sub ||
+                claim.Type == ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrEmpty(userIdClaim))
+            {
+                throw new SecurityTokenException("User ID claim missing from token.");
+            }
+
+            return Guid.Parse(userIdClaim);
         }
     }
 }

@@ -5,13 +5,13 @@ namespace QuantityMeasurementAppModelLayer.DTO
         public double Value { get; set; }
         public string Unit { get; set; }
 
-        public int EnumIndex { get; set; }
+        public int CategoryIndex { get; set; }
 
-        public QuantityDTO(double value, string unit,int enumIndex)
+        public QuantityDTO(double value, string unit,int categoryIndex)
         {
             Value = value;
             Unit = unit;
-            EnumIndex = enumIndex;
+            CategoryIndex = categoryIndex;
         }
     }
 }

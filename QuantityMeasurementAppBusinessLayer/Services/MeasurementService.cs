@@ -13,12 +13,13 @@ namespace QuantityMeasurementAppBusinessLayer.Services
 {
     public class MeasurementService : IMeasurementService
     {
+        private readonly IJwtService _jwtService;
         private readonly IMeasurementRepository _repository;
 
-        public MeasurementService(IMeasurementRepository repository)
+        public MeasurementService(IMeasurementRepository repository, IJwtService jwtService)
         {
-
             _repository = repository;
+            _jwtService = jwtService;
         }
 
         private Enum ParseUnit(Type unitType, string unitName)
@@ -43,26 +44,29 @@ namespace QuantityMeasurementAppBusinessLayer.Services
                 _ => throw new InvalidUnitException($"{index} is an Invalid index. In MeasurementService.cs"),
             };
         }
-        public async Task<QuantityDTO> PerformConversion(QuantityDTO q, string toUnit)
+        public async Task<QuantityDTO> PerformConversion(QuantityDTO q, string toUnit, string? userId)
         {
-            Type unitType = GetUnitFromIndex(q.EnumIndex);
+
+            Type unitType = GetUnitFromIndex(q.CategoryIndex);
             Enum unit = ParseUnit(unitType, q.Unit);
             Enum targetUnit = ParseUnit(unitType, toUnit);
 
             Quantity quantity = new Quantity(q.Value, unit);
             QuantityDTO res = quantity.ConvertTo(targetUnit);
 
-            await AddToHistory(q, null, res, "Conversion");
+            Console.WriteLine(userId);
+            if (userId != null)
+                await AddToHistory(q, null, res, "Conversion", userId,unitType.Name);
 
             return res;
         }
 
-        public async Task<QuantityDTO> PerformAddition(QuantityDTO q1, QuantityDTO q2, string toUnit)
+        public async Task<QuantityDTO> PerformAddition(QuantityDTO q1, QuantityDTO q2, string toUnit, string? userId)
         {
-            if (q1.EnumIndex != q2.EnumIndex)
+            if (q1.CategoryIndex != q2.CategoryIndex)
                 throw new IncompatibleUnitException("Cannot perform addition on different unit types.");
 
-            Type unitType = GetUnitFromIndex(q1.EnumIndex);
+            Type unitType = GetUnitFromIndex(q1.CategoryIndex);
             Enum unit1 = ParseUnit(unitType, q1.Unit);
             Enum unit2 = ParseUnit(unitType, q2.Unit);
             Enum targetUnit = ParseUnit(unitType, toUnit);
@@ -71,16 +75,17 @@ namespace QuantityMeasurementAppBusinessLayer.Services
             Quantity quantity2 = new Quantity(q2.Value, unit2);
             QuantityDTO result = quantity1.Add(quantity2, targetUnit);
 
-            await AddToHistory(q1, q2, result, "Addition");
+            if (userId != null)
+                await AddToHistory(q1, q2, result, "Addition", userId,unitType.Name);
             return result;
         }
 
-        public async Task<QuantityDTO> PerformSubtraction(QuantityDTO q1, QuantityDTO q2, string toUnit)
+        public async Task<QuantityDTO> PerformSubtraction(QuantityDTO q1, QuantityDTO q2, string toUnit, string? userId)
         {
-            if (q1.EnumIndex != q2.EnumIndex)
+            if (q1.CategoryIndex != q2.CategoryIndex)
                 throw new IncompatibleUnitException("Cannot perform addition on different unit types.");
 
-            Type unitType = GetUnitFromIndex(q1.EnumIndex);
+            Type unitType = GetUnitFromIndex(q1.CategoryIndex);
             Enum unit1 = ParseUnit(unitType, q1.Unit);
             Enum unit2 = ParseUnit(unitType, q2.Unit);
             Enum targetUnit = ParseUnit(unitType, toUnit);
@@ -89,11 +94,32 @@ namespace QuantityMeasurementAppBusinessLayer.Services
             Quantity quantity2 = new Quantity(q2.Value, unit2);
             QuantityDTO result = quantity1.Add(quantity2, targetUnit);
 
-            await AddToHistory(q1, q2, result, "Addition");
+            if (userId != null)
+                await AddToHistory(q1, q2, result, "Addition", userId,unitType.Name);
             return result;
         }
-        private async Task AddToHistory(QuantityDTO q1, QuantityDTO? q2, QuantityDTO result, string operation)
+
+        public async Task<QuantityDTO> PerformDivision(QuantityDTO q1, QuantityDTO q2, string toUnit, string? userId)
         {
+            if (q1.CategoryIndex != q2.CategoryIndex)
+                throw new IncompatibleUnitException("Cannot perform addition on different unit types.");
+
+            Type unitType = GetUnitFromIndex(q1.CategoryIndex);
+            Enum unit1 = ParseUnit(unitType, q1.Unit);
+            Enum unit2 = ParseUnit(unitType, q2.Unit);
+            Enum targetUnit = ParseUnit(unitType, toUnit);
+
+            Quantity quantity1 = new Quantity(q1.Value, unit1);
+            Quantity quantity2 = new Quantity(q2.Value, unit2);
+            QuantityDTO result = quantity1.Divide(quantity2);
+
+            if (userId != null)
+                await AddToHistory(q1, q2, result, "Division", userId,unitType.Name);
+            return result;
+        }
+        private async Task AddToHistory(QuantityDTO q1, QuantityDTO? q2, QuantityDTO result, string operation, string? userId,string category)
+        {
+            if (userId == null) return;
             QuantityMeasurementHistoryEntity history = new QuantityMeasurementHistoryEntity
             {
                 InputValue1 = q1.Value,
@@ -103,7 +129,9 @@ namespace QuantityMeasurementAppBusinessLayer.Services
                 TargetUnit = result.Unit,
                 Operation = operation,
                 ResultValue = result.Value,
-                ResultUnit = result.Unit
+                ResultUnit = result.Unit,
+                Category = category,
+                UserId = Guid.Parse(userId)
             };
 
             await _repository.SaveHistory(history);
