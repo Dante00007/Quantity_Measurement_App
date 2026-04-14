@@ -35,7 +35,7 @@ namespace QuantityMeasurementAppBusinessLayer.Services
                 issuer: _jwtSettings.Issuer,
                 audience: _jwtSettings.Audience,
                 claims: claims,
-                expires: DateTime.Now.AddMinutes(10),
+                expires: DateTime.Now.AddMinutes(1),
                 signingCredentials: creds
             );
 
